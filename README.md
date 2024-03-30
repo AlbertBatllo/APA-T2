@@ -1,6 +1,6 @@
 # Segunda tarea de APA 2023: Manejo de números primos
 
-## Nom i cognoms
+## Albert Batlló
 
 ## Fichero `primos.py`
 
@@ -69,10 +69,151 @@ comprobarse las siguientes condiciones:
 Inserte a continuación una captura de pantalla que muestre el resultado de ejecutar el fichero `primos.py` con la opción
 *verbosa*, de manera que se muestre el resultado de la ejecución de los tests unitarios.
 
+![runprimos1](https://github.com/albino-pav/APA-T2/assets/100155905/de642912-306a-4c20-bc84-3fc1662ad653)
+
+![runprimos2](https://github.com/albino-pav/APA-T2/assets/100155905/86932ff6-73f3-4da6-b1fd-152c2b04448d)
+
 #### Código desarrollado
 
 Inserte a continuación el contenido del fichero `primos.py` usando los comandos necesarios para que se realice el
 realce sintáctico en Python del mismo.
+
+```
+
+def esPrimo(numero):
+    """
+    Devuelve True si su argumento es primo, y False si no lo es.
+    
+    >>> for numero in range (2, 50):
+    ...    if esPrimo(numero):
+    ...        print(numero)
+    2
+    3
+    5
+    7
+    11
+    13
+    17
+    19
+    23
+    29
+    31
+    37
+    41
+    43
+    47
+    """
+    for prueba in range(2,numero):
+        if numero%prueba == 0:
+            return False
+    return True
+
+def primos(numero):
+    """
+    Devuelve una tupla con todos los números primos menores que su argumento.
+    
+    >>> primos(50)
+    (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47)
+    """    
+    ## return tuple([prueba for prueba in range(2,numero)] if esPrimo(prueba))
+    primos = []
+    for prueba in range(2, numero):
+        if esPrimo(prueba):
+            primos.append(prueba)
+    return tuple(primos)
+
+def descompon(numero): 
+    """
+    Devuelve una tupla con la descomposición en factores primos de su argumento.
+    
+    >>> descompon(36 * 175 * 143)
+    (2, 2, 3, 3, 5, 5, 7, 11, 13)
+    """
+    factores = []
+    divisor = 2
+    while numero > 1:
+        if numero % divisor == 0:
+            factores.append(divisor)
+            numero //= divisor
+        else:
+            divisor += 1
+    return tuple(factores)
+
+def mcm(num1, num2):
+    """
+    Devuelve el mínimo común múltiplo de dos números enteros.
+    
+    >>> mcm(90, 14)
+    630
+    """
+    factores_num1 = descompon(num1)
+    factores_num2 = descompon(num2)
+    
+    factores_combinados = list(factores_num1)
+    for factor in factores_num2:
+        if factor not in factores_combinados:
+            factores_combinados.append(factor)
+    
+    mcm = 1
+    for factor in factores_combinados:
+        mcm *= factor
+    
+    return mcm
+
+def mcd(num1, num2):
+    """
+    Devuelve el máximo común divisor de dos números enteros.
+        
+    >>> mcd(924, 780)
+    12
+    """
+    factores_num1 = descompon(num1)
+    factores_num2 = descompon(num2)
+
+    factores_num1_list = list(factores_num1)
+    factores_num2_list = list(factores_num2)
+
+    factores_comunes = []
+    for factor in factores_num1_list:
+        if factor in factores_num2_list:
+            factores_comunes.append(factor)
+            factores_num2_list.remove(factor)
+
+    resultado = 1
+    for factor in factores_comunes:
+        resultado *= factor
+
+    return resultado
+
+def mcmN(*numeros): 
+    """
+    Devuelve el mínimo común múltiplo de un numero arbitrario de numeros. 
+    
+    >>> mcmN(42, 60, 70, 63)
+    1260
+    """
+    resultado = numeros[0]
+    for num in numeros[1:]:
+        resultado = (resultado * num) // mcd(resultado, num)
+    return resultado
+
+def mcdN(*numeros): 
+    """
+    Devuelve el máximo común divisor de un numero arbitrario de numeros. 
+    
+    >>> mcdN(840, 630, 1050, 1470)
+    210
+    """
+    resultado = numeros[0]
+    for num in numeros[1:]:
+        resultado = mcd(resultado, num)
+    return resultado
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod(verbose=True)
+
+```
 
 #### Subida del resultado al repositorio GitHub ¿y *pull-request*?
 
